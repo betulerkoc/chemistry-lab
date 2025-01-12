@@ -19,7 +19,18 @@ function SoapMakingExperiment() {
     const [pouringEthanol, setPouringEthanol] = useState(false);
     const [pouringWater, setPouringWater] = useState(false);
     const [pouringSodium, setPouringSodium] = useState(false);
+    const [isHeating, setIsHeating] = useState(false);
+    const [heatingTime, setHeatingTime] = useState(0);
+    const [saltLevel, setSaltLevel] = useState(0);
+    const [saltWaterLevel, setSaltWaterLevel] = useState(0);
+    const [isPouringSalt, setIsPouringSalt] = useState(false);
+    const [isPouringSaltWater, setIsPouringSaltWater] = useState(false);
+    const [isSeparating, setIsSeparating] = useState(false);
+    const [separationTime, setSeparationTime] = useState(0);
+    const [isPouringSoap, setIsPouringSoap] = useState(false);
     const baseBeakerRef = useRef();
+    const oilBeakerRef = useRef();
+    const saltBeakerRef = useRef();
   
     const handlePrepareOil = () => {
       setNotificationText('Adding 10 g of oil to a 250 mL beaker');
@@ -131,6 +142,132 @@ function SoapMakingExperiment() {
       }, 50);
     };
   
+    const handleHeatMixture = () => {
+      setNotificationText('Heat the oil-base mixture using a burner until saponification is complete.');
+      setShowNotification(true);
+      setIsHeating(true);
+
+      if (oilBeakerRef.current) {
+        oilBeakerRef.current.position.x = 2;
+        oilBeakerRef.current.position.y = 2;
+        oilBeakerRef.current.position.z = 0.5;
+      }
+
+      let timer = 0;
+      const heatInterval = setInterval(() => {
+        timer += 1;
+        setHeatingTime(timer);
+        
+        if (timer >= 10) {
+          clearInterval(heatInterval);
+          setIsHeating(false);
+          setHeatingTime(0);
+          
+          if (oilBeakerRef.current) {
+            oilBeakerRef.current.position.x = -2.5;
+            oilBeakerRef.current.position.y = 1.5;
+            oilBeakerRef.current.position.z = 1.5;
+          }
+          
+          setNotificationText('Allow it to cool to room temperature and check the pH.');
+          setTimeout(() => setShowNotification(false), 5000);
+        }
+      }, 1000);
+    };
+  
+    const handlePrepareSaltSolution = () => {
+      setNotificationText('Dissolve 50 g of sodium chloride in 150 mL of water in a beaker.');
+      setShowNotification(true);
+      setIsPouringSalt(true);
+      let saltAmount = 0;
+      const saltInterval = setInterval(() => {
+        saltAmount += 0.01;
+        setSaltLevel(saltAmount);
+        if (saltAmount >= 0.15) {
+          clearInterval(saltInterval);
+          setIsPouringSalt(false);
+          setIsPouringSaltWater(true);
+          let waterAmount = 0;
+          const waterInterval = setInterval(() => {
+            waterAmount += 0.01;
+            setSaltWaterLevel(waterAmount);
+            if (waterAmount >= 0.3) {
+              clearInterval(waterInterval);
+              setIsPouringSaltWater(false);
+              setTimeout(() => setShowNotification(false), 1000);
+            }
+          }, 50);
+        }
+      }, 50);
+    };
+  
+    const handleSeparateSoap = () => {
+      setNotificationText('Add the soap solution to the salt solution, stir for at least 10 minutes');
+      setShowNotification(true);
+      setIsSeparating(true);
+
+      if (oilBeakerRef.current) {
+        oilBeakerRef.current.position.x = -3.8;
+        oilBeakerRef.current.position.y = 2;
+        oilBeakerRef.current.position.z = 1.5;
+
+        setTimeout(() => {
+          oilBeakerRef.current.rotation.z = Math.PI / 4; 
+          setTimeout(() => {
+            setIsPouringSoap(false);
+            oilBeakerRef.current.rotation.z = 0;
+            
+            setIsStirring(true);
+            let time = 0;
+            const stirInterval = setInterval(() => {
+              time += 1;
+              setSeparationTime(time);
+              setStirAngle(angle => angle + 10);
+              
+              if (time >= 10) {
+                clearInterval(stirInterval);
+                setIsStirring(false);
+                setIsSeparating(false);
+                setSeparationTime(0);
+
+                if (oilBeakerRef.current) {
+                  oilBeakerRef.current.position.x = -2.5;
+                  oilBeakerRef.current.position.y = 1.5;
+                }
+            
+                setNotificationText('Cool the mixture');
+            
+                setTimeout(() => {
+                  setNotificationText('Filter the soap solution');
+                
+                  if (saltBeakerRef.current) {
+                    saltBeakerRef.current.position.x = 4.2;
+                    saltBeakerRef.current.position.y = 2.5;
+                    saltBeakerRef.current.position.z = 1.5;
+                    
+                    setTimeout(() => {
+                      saltBeakerRef.current.rotation.z = Math.PI / 4;
+
+                      setTimeout(() => {
+                        saltBeakerRef.current.position.x = -4;
+                        saltBeakerRef.current.position.y = 1.5;
+                        saltBeakerRef.current.position.z = 1.5;
+                        saltBeakerRef.current.rotation.z = 0;
+                        setNotificationText('Dry the soap and weigh it');
+                        setTimeout(() => {
+                          setShowNotification(false);
+                        }, 5000);
+                      }, 5000);
+                    }, 2000);
+                  }
+                }, 7000);
+              }
+            }, 1000);
+          }, 2000);
+        }, 1000);
+      }
+    };
+  
     return (
       <div style={{ width: '100vw', height: '100vh', background: '#87CEEB' }}>
         <Canvas
@@ -157,7 +294,7 @@ function SoapMakingExperiment() {
             <meshStandardMaterial color="#8B4513" />
           </mesh>
 
-          <group position={[-2.5, 1.5, 1.5]}>
+          <group ref={oilBeakerRef} position={[-2.5, 1.5, 1.5]}>
             <mesh>
               <cylinderGeometry args={[0.25, 0.2, 0.5]} />
               <meshStandardMaterial color="#B0C4DE" transparent opacity={0.2} />
@@ -351,7 +488,7 @@ function SoapMakingExperiment() {
             </Text>
           </group>
   
-          <group position={[0, 1.5, -1.5]}>
+          <group position={[2.5, 1.5, -1.5]}>
             <mesh>
               <cylinderGeometry args={[0.15, 0.15, 0.5]} />
               <meshStandardMaterial color="#FFD700" transparent opacity={0.8} />
@@ -411,27 +548,6 @@ function SoapMakingExperiment() {
             </Text>
           </group>
 
-          <group position={[4, 1.5, 0]}>
-            <mesh>
-              <coneGeometry args={[0.2, 0.3, 32]} />
-              <meshStandardMaterial color="#B0C4DE" transparent opacity={0.3} />
-            </mesh>
-            <mesh position={[0, -0.2, 0]}>
-              <cylinderGeometry args={[0.02, 0.02, 0.1]} />
-              <meshStandardMaterial color="#B0C4DE" transparent opacity={0.3} />
-            </mesh>
-            <Text
-              position={[0, 0.7, 0]}
-              fontSize={0.2}
-              color="black"
-              anchorX="center"
-              anchorY="middle"
-            >
-              Funnel
-            </Text>
-          </group>
-  
-  
           <group ref={baseBeakerRef} position={[0, 1.5, 1.5]}>
             <mesh>
               <cylinderGeometry args={[0.25, 0.2, 0.5]} />
@@ -486,7 +602,7 @@ function SoapMakingExperiment() {
           )}
   
           {isStirring && (
-            <group position={[-2.5, 2, 1.5]}>
+            <group position={isSeparating ? [-4, 2, 1.5] : [-2.5, 2, 1.5]}>
               <mesh rotation={[0, stirAngle, Math.PI / 6]}>
                 <cylinderGeometry args={[0.02, 0.02, 0.8]} />
                 <meshStandardMaterial color="#B0C4DE" />
@@ -515,6 +631,66 @@ function SoapMakingExperiment() {
             </mesh>
           )}
   
+          <group position={[-2, 1.5, -1.5]}>
+            <mesh>
+              <cylinderGeometry args={[0.2, 0.15, 0.6]} />
+              <meshStandardMaterial color="#FFFFFF" transparent opacity={0.8} />
+            </mesh>
+            <mesh position={[0, 0.35, 0]}>
+              <cylinderGeometry args={[0.08, 0.08, 0.1]} />
+              <meshStandardMaterial color="#FFFFFF" />
+            </mesh>
+            <Text
+              position={[0, 0.7, 0]}
+              fontSize={0.2}
+              color="black"
+              anchorX="center"
+              anchorY="middle"
+            >
+              Sodium Chloride
+            </Text>
+          </group>
+  
+          <group ref={saltBeakerRef} position={[-4, 1.5, 1.5]}>
+            <mesh>
+              <cylinderGeometry args={[0.25, 0.2, 0.5]} />
+              <meshStandardMaterial color="#B0C4DE" transparent opacity={0.2} />
+            </mesh>
+            {saltLevel > 0 && (
+              <mesh position={[0, -0.25 + (saltLevel / 2), 0]}>
+                <cylinderGeometry args={[0.19, 0.19, saltLevel]} />
+                <meshStandardMaterial color="#FFFFFF" transparent opacity={0.8} />
+              </mesh>
+            )}
+            {saltWaterLevel > 0 && (
+              <mesh position={[0, -0.25 + saltLevel + (saltWaterLevel / 2), 0]}>
+                <cylinderGeometry args={[0.19, 0.19, saltWaterLevel]} />
+                <meshStandardMaterial color="#ADD8E6" transparent opacity={0.4} />
+              </mesh>
+            )}
+          </group>
+
+          {isPouringSalt && (
+            <mesh position={[-2, 2.5, -1.5]}>
+              <cylinderGeometry args={[0.05, 0.05, 1]} />
+              <meshStandardMaterial color="#FFFFFF" transparent opacity={0.8} />
+            </mesh>
+          )}
+
+          {isPouringSaltWater && (
+            <mesh position={[4, 2.5, -1.5]}>
+              <cylinderGeometry args={[0.05, 0.05, 1]} />
+              <meshStandardMaterial color="#ADD8E6" transparent opacity={0.3} />
+            </mesh>
+          )}
+  
+          {isPouringSoap && (
+            <mesh position={[-4.4, 2, 1.5]}>
+              <cylinderGeometry args={[0.05, 0.05, 0.8]} />
+              <meshStandardMaterial color="#FFD700" transparent opacity={0.8} />
+            </mesh>
+          )}
+  
           <OrbitControls
             enableZoom={true}
             enablePan={true}
@@ -522,6 +698,70 @@ function SoapMakingExperiment() {
             minDistance={2}
             maxDistance={20}
           />
+
+          <group position={[4, 1.1, 1.5]}>
+            <mesh position={[0.25, 0.3, 0.144]} rotation={[-0.2, 0, 0.3]}>
+              <cylinderGeometry args={[0.015, 0.015, 0.7]} />
+              <meshStandardMaterial color="#2a2a2a" metalness={0.8} roughness={0.2} />
+            </mesh>
+            <mesh position={[-0.25, 0.3, 0.144]} rotation={[-0.3, 0, -0.3]}>
+              <cylinderGeometry args={[0.015, 0.015, 0.7]} />
+              <meshStandardMaterial color="#2a2a2a" metalness={0.8} roughness={0.2} />
+            </mesh>
+            <mesh position={[0, 0.3, -0.289]} rotation={[0.4, 0, 0]}>
+              <cylinderGeometry args={[0.015, 0.015, 0.7]} />
+              <meshStandardMaterial color="#2a2a2a" metalness={0.8} roughness={0.2} />
+            </mesh>
+
+            <mesh 
+              position={[0, 0.6, 0]}
+              rotation={[Math.PI / 2, 0, 0]}
+            >
+              <torusGeometry args={[0.15, 0.015, 16, 32]} />
+              <meshStandardMaterial color="#2a2a2a" metalness={0.8} roughness={0.2} />
+            </mesh>
+
+            <group position={[0, 0.7, 0]}>
+              <mesh>
+                <cylinderGeometry args={[0.2, 0.03, 0.25]} />
+                <meshPhysicalMaterial 
+                  color="#ffffff"
+                  transparent={true}
+                  opacity={0.4}
+                  roughness={0}
+                  metalness={0}
+                  clearcoat={1}
+                />
+              </mesh>
+              
+              <mesh position={[0, 0.05, 0]} rotation={[-Math.PI, 0, 0]}>
+                <coneGeometry args={[0.2, 0.22, 33]} />
+                <meshStandardMaterial 
+                  color="#F5F5F5"
+                  side={2} 
+                  roughness={1}
+                  metalness={0}
+                />
+              </mesh>
+            </group>
+
+            <group position={[0, 0.25, 0]}>
+              <mesh>
+                <cylinderGeometry args={[0.2, 0.2, 0.4]} />
+                <meshStandardMaterial color="#B0C4DE" transparent opacity={0.3} />
+              </mesh>
+            </group>
+
+            <Text
+              position={[0, 1.2, 0]}
+              fontSize={0.15}
+              color="black"
+              anchorX="center"
+              anchorY="middle"
+            >
+              Filtration Setup
+            </Text>
+          </group>
         </Canvas>
   
         {showNotification && (
@@ -610,45 +850,110 @@ function SoapMakingExperiment() {
               </button>
             </li>
             <li>
-              <button style={{
-                padding: '10px 20px',
-                backgroundColor: '#4CAF50',
-                color: 'white',
-                border: 'none',
-                borderRadius: '5px',
-                cursor: 'pointer',
-                width: '200px'
-              }}>
-                4. Heat the Mixture
+              <button 
+                onClick={handleHeatMixture}
+                disabled={isHeating}
+                style={{
+                  padding: '10px 20px',
+                  backgroundColor: '#4CAF50',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '5px',
+                  cursor: isHeating ? 'not-allowed' : 'pointer',
+                  width: '200px'
+                }}
+              >
+                4. Heat the Mixture {isHeating ? `(${10 - heatingTime}s)` : ''}
               </button>
             </li>
             <li>
-              <button style={{
-                padding: '10px 20px',
-                backgroundColor: '#4CAF50',
-                color: 'white',
-                border: 'none',
-                borderRadius: '5px',
-                cursor: 'pointer',
-                width: '200px'
-              }}>
+              <button 
+                onClick={handlePrepareSaltSolution}
+                style={{
+                  padding: '10px 20px',
+                  backgroundColor: '#4CAF50',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '5px',
+                  cursor: 'pointer',
+                  width: '200px'
+                }}
+              >
                 5. Prepare Salt Solution
               </button>
             </li>
             <li>
-              <button style={{
-                padding: '10px 20px',
-                backgroundColor: '#4CAF50',
-                color: 'white',
-                border: 'none',
-                borderRadius: '5px',
-                cursor: 'pointer',
-                width: '200px'
-              }}>
-                6. Separate Soap
+              <button 
+                onClick={handleSeparateSoap}
+                disabled={isSeparating}
+                style={{
+                  padding: '10px 20px',
+                  backgroundColor: '#4CAF50',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '5px',
+                  cursor: isSeparating ? 'not-allowed' : 'pointer',
+                  width: '200px'
+                }}
+              >
+                6. Separate Soap {isSeparating ? `(${10 - separationTime}s)` : ''}
               </button>
             </li>
           </ol>
+        </div>
+
+        <div style={{
+          position: 'fixed',
+          left: '20px',
+          top: '20px',
+          backgroundColor: 'rgba(255, 255, 255, 0.9)',
+          padding: '20px',
+          borderRadius: '10px',
+          color: 'black',
+          boxShadow: '0 0 10px rgba(0,0,0,0.1)',
+          maxWidth: '400px'
+        }}>
+          <h2>Chemical Reactions</h2>
+          <div style={{
+            fontFamily: 'monospace',
+            whiteSpace: 'pre-wrap',
+            fontSize: '14px',
+            lineHeight: '1.5',
+            backgroundColor: 'rgba(240, 240, 240, 0.9)',
+            padding: '10px',
+            borderRadius: '5px',
+            marginBottom: '10px'
+          }}>
+            <strong>1. Saponification Reaction:</strong>
+            <br />
+            Fat/Oil + NaOH → Soap + Glycerol
+            <br />
+            <br />
+            <strong>Detailed Reaction:</strong>
+            <br />
+            C₃H₅(OOCR)₃ + 3NaOH → 3RCOONa + C₃H₅(OH)₃
+            <br />
+            <em style={{ fontSize: '12px' }}>
+              (Triglyceride + Sodium Hydroxide → Sodium Salt of Fatty Acid + Glycerol)
+            </em>
+          </div>
+          <div style={{
+            fontFamily: 'monospace',
+            whiteSpace: 'pre-wrap',
+            fontSize: '14px',
+            lineHeight: '1.5',
+            backgroundColor: 'rgba(240, 240, 240, 0.9)',
+            padding: '10px',
+            borderRadius: '5px'
+          }}>
+            <strong>2. Salting Out Process:</strong>
+            <br />
+            Addition of NaCl causes soap to precipitate out of solution
+            <br />
+            <em style={{ fontSize: '12px' }}>
+              (Separates soap from glycerol and impurities)
+            </em>
+          </div>
         </div>
       </div>
     )
