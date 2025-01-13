@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls, Text } from '@react-three/drei'
+import AspirinQuiz from '../AspirinQuiz';
 
 function AspirinSynthesisExperiment() {
     const [showNotification, setShowNotification] = useState(false);
@@ -36,6 +37,7 @@ function AspirinSynthesisExperiment() {
     const [pouringToWater, setPouringToWater] = useState(false);
     const [movingToIceBath, setMovingToIceBath] = useState(false);
     const [filterPaperPosition, setFilterPaperPosition] = useState([4, 2, 1.6]);
+    const [quizCompleted, setQuizCompleted] = useState(false);
 
     const handleStep = (step) => {
         if (step === 'Acid Preparation') {
@@ -226,8 +228,12 @@ function AspirinSynthesisExperiment() {
         }
     };
 
+    const handleQuizComplete = (passed) => {
+        setQuizCompleted(passed);
+    };
+
     return (
-        <div style={{ width: '100vw', height: '100vh', background: '#87CEEB' }}>
+        <div style={{ width: '100vw', height: '100vh' }}>
             <Canvas
                 camera={{
                     position: [10, 5, 10],
@@ -840,122 +846,145 @@ function AspirinSynthesisExperiment() {
                 <OrbitControls />
             </Canvas>
 
-            <div style={{
-                position: 'fixed',
-                right: '20px',
-                top: '20px',
-                backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                padding: '20px',
-                borderRadius: '10px',
-                boxShadow: '0 0 10px rgba(0,0,0,0.1)',
-                color: 'black'
-            }}>
-                <h2 style={{ margin: '0 0 15px 0' }}>Aspirin Synthesis</h2>
-                <div style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '8px'
-                }}>
-                    {[
-                        'Acid Preparation',
-                        'Acid Catalyst Addition',
-                        'Heating Phase',
-                        'Cooling and Precipitation',
-                        'Filtration',
-                        'Purification',
-                        'Final Steps',
-                        'Purity Check'
-                    ].map((step, index) => (
-                        <button
-                            key={index}
-                            onClick={() => handleStep(step)}
-                            style={{
-                                padding: '8px 16px',
-                                backgroundColor: '#4CAF50',
-                                color: 'white',
-                                border: 'none',
-                                borderRadius: '5px',
-                                cursor: 'pointer',
-                                width: '200px',
-                                textAlign: 'left'
-                            }}
-                        >
-                            {`${index + 1}. ${step}`}
-                        </button>
-                    ))}
-                </div>
-            </div>
-
-            <div style={{
-                position: 'fixed',
-                left: '20px',
-                top: '20px',
-                backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                padding: '20px',
-                borderRadius: '10px',
-                boxShadow: '0 0 10px rgba(0,0,0,0.1)',
-                maxWidth: '300px',
-                color: 'black'
-            }}>
-                <h2 style={{ margin: '0 0 15px 0' }}>Reaction Overview</h2>
-                <div style={{
-                    backgroundColor: 'rgba(240, 240, 240, 0.9)',
-                    padding: '12px',
-                    borderRadius: '5px',
-                    fontSize: '14px',
-                    fontFamily: 'monospace',
-                    lineHeight: '1.4'
-                }}>
-                    <div style={{ marginBottom: '12px' }}>
-                        <strong>Synthesis Reaction:</strong><br />
-                        C₇H₆O₃ + (CH₃CO)₂O → C₉H₈O₄ + CH₃COOH
+            {/* Control panels and UI */}
+            {quizCompleted && (
+                <>
+                    <div style={{
+                        position: 'fixed',
+                        right: '20px',
+                        top: '20px',
+                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                        padding: '20px',
+                        borderRadius: '10px',
+                        boxShadow: '0 0 10px rgba(0,0,0,0.1)',
+                        color: 'black'
+                    }}>
+                        <h2 style={{ margin: '0 0 15px 0' }}>Aspirin Synthesis</h2>
+                        <div style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '8px'
+                        }}>
+                            {[
+                                'Acid Preparation',
+                                'Acid Catalyst Addition',
+                                'Heating Phase',
+                                'Cooling and Precipitation',
+                                'Filtration',
+                                'Purification',
+                                'Final Steps',
+                                'Purity Check'
+                            ].map((step, index) => (
+                                <button
+                                    key={index}
+                                    onClick={() => handleStep(step)}
+                                    style={{
+                                        padding: '8px 16px',
+                                        backgroundColor: '#4CAF50',
+                                        color: 'white',
+                                        border: 'none',
+                                        borderRadius: '5px',
+                                        cursor: 'pointer',
+                                        width: '200px',
+                                        textAlign: 'left'
+                                    }}
+                                >
+                                    {`${index + 1}. ${step}`}
+                                </button>
+                            ))}
+                        </div>
                     </div>
-                    <div>
-                        <strong>Conditions:</strong><br />
-                        • Temperature: ~85°C<br />
-                        • Catalyst: H₂SO₄<br />
-                        • Time: ~15 minutes
-                    </div>
-                </div>
-            </div>
 
-            {showNotification && (
-                <div style={{
-                    position: 'absolute',
-                    top: '20px',
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    background: 'black',
-                    padding: '20px',
-                    borderRadius: '10px',
-                    boxShadow: '0 0 10px rgba(0,0,0,0.1)',
-                    zIndex: 1000,
-                    color: 'white',
-                    fontWeight: 'bold'
-                }}>
-                    {notificationText}
-                </div>
+                    <div style={{
+                        position: 'fixed',
+                        left: '20px',
+                        top: '20px',
+                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                        padding: '20px',
+                        borderRadius: '10px',
+                        boxShadow: '0 0 10px rgba(0,0,0,0.1)',
+                        maxWidth: '300px',
+                        color: 'black'
+                    }}>
+                        <h2 style={{ margin: '0 0 15px 0' }}>Reaction Overview</h2>
+                        <div style={{
+                            backgroundColor: 'rgba(240, 240, 240, 0.9)',
+                            padding: '12px',
+                            borderRadius: '5px',
+                            fontSize: '14px',
+                            fontFamily: 'monospace',
+                            lineHeight: '1.4'
+                        }}>
+                            <div style={{ marginBottom: '12px' }}>
+                                <strong>Synthesis Reaction:</strong><br />
+                                C₇H₆O₃ + (CH₃CO)₂O → C₉H₈O₄ + CH₃COOH
+                            </div>
+                            <div>
+                                <strong>Conditions:</strong><br />
+                                • Temperature: ~85°C<br />
+                                • Catalyst: H₂SO₄<br />
+                                • Time: ~15 minutes
+                            </div>
+                        </div>
+                    </div>
+
+                    {showNotification && (
+                        <div style={{
+                            position: 'absolute',
+                            top: '20px',
+                            left: '50%',
+                            transform: 'translateX(-50%)',
+                            background: 'black',
+                            padding: '20px',
+                            borderRadius: '10px',
+                            boxShadow: '0 0 10px rgba(0,0,0,0.1)',
+                            zIndex: 1000,
+                            color: 'white',
+                            fontWeight: 'bold'
+                        }}>
+                            {notificationText}
+                        </div>
+                    )}
+
+                    {showWarning && (
+                        <div style={{
+                            position: 'fixed',
+                            bottom: '10px',
+                            left: '50%',
+                            transform: 'translateX(-50%)',
+                            backgroundColor: '#ff3333',
+                            color: 'white',
+                            padding: '15px 30px',
+                            borderRadius: '8px',
+                            zIndex: 99999,
+                            fontWeight: 'bold',
+                            fontSize: '20px',
+                            boxShadow: '0 4px 6px rgba(0,0,0,0.2)',
+                            border: '2px solid #ff0000',
+                            pointerEvents: 'none',
+                            userSelect: 'none'
+                        }}>
+                            {warningText}
+                        </div>
+                    )}
+                </>
             )}
 
-            {showWarning && (
+            {/* Quiz overlay */}
+            {!quizCompleted && (
                 <div style={{
                     position: 'fixed',
-                    bottom: '10px',
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    backgroundColor: '#ff3333',
-                    color: 'white',
-                    padding: '15px 30px',
-                    borderRadius: '8px',
-                    zIndex: 99999,
-                    fontWeight: 'bold',
-                    fontSize: '20px',
-                    boxShadow: '0 4px 6px rgba(0,0,0,0.2)',
-                    border: '2px solid #ff0000',
-                    pointerEvents: 'none',
-                    userSelect: 'none'
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    zIndex: 1000
                 }}>
-                    {warningText}
+                    <AspirinQuiz onQuizComplete={handleQuizComplete} />
                 </div>
             )}
         </div>
