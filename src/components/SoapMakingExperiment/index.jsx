@@ -291,7 +291,7 @@ function SoapMakingExperiment() {
   
           <mesh position={[0, 1, 0]}>
             <boxGeometry args={[12, 0.2, 6]} />
-            <meshStandardMaterial color="#8B4513" />
+            <meshStandardMaterial color="#0b2a5c" />
           </mesh>
 
           <group ref={oilBeakerRef} position={[-2.5, 1.5, 1.5]}>

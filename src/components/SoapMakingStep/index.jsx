@@ -18,7 +18,7 @@ function SoapMakingStep() {
           color="black"
           textAlign="center"
         >
-          Step here to start soap making experiment
+          Step here to make some bubbles
         </Text>
       </group>
     )
