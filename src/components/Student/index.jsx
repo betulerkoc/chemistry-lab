@@ -64,10 +64,6 @@ function Student({ onExperiment }) {
           setWearing(true)
         }
   
-        const isOnExperimentStep =
-          Math.abs(studentRef.current.position.x - (-6)) < 0.5 &&
-          Math.abs(studentRef.current.position.z - (-5)) < 0.2; 
-
         if (moveDirection.x !== 0 || moveDirection.z !== 0) {
           console.log('Student position:',
             studentRef.current.position.x.toFixed(2),
@@ -75,9 +71,7 @@ function Student({ onExperiment }) {
           );
         }
   
-        if (isOnExperimentStep) {
-          onExperiment(wearing)
-        }
+        checkExperimentArea(studentRef.current.position);
   
         studentRef.current.position.x = Math.max(-8, Math.min(8, newX))
         studentRef.current.position.z = Math.max(-8, Math.min(8, newZ))
@@ -91,6 +85,21 @@ function Student({ onExperiment }) {
         }
       }
     })
+  
+    const checkExperimentArea = (position) => {
+
+        const soapArea = { x: -6.5, z: -5 }; 
+        const aspirinArea = { x: 6.5, z: -5 }; 
+        const tolerance = 1;
+
+        if (Math.abs(position.x - soapArea.x) < tolerance && 
+            Math.abs(position.z - soapArea.z) < tolerance) {
+            onExperiment(wearing, 'soap');
+        } else if (Math.abs(position.x - aspirinArea.x) < tolerance && 
+                   Math.abs(position.z - aspirinArea.z) < tolerance) {
+            onExperiment(wearing, 'aspirin');
+        }
+    }
   
     return (
       <group ref={studentRef} position={[0, 0, 0]} rotation={[0, Math.PI, 0]}>

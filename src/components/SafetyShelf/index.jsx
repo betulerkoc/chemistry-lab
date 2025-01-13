@@ -5,11 +5,11 @@ function SafetyShelf() {
         <group position={[0, 0, -2]}>
             <mesh position={[0, 1.5, 0]}>
                 <boxGeometry args={[3, 0.1, 1]} />
-                <meshStandardMaterial color="#8b4513" />
+                <meshStandardMaterial color="#0b2a5c" />
             </mesh>
             <mesh position={[0, 1, 0.4]}>
                 <boxGeometry args={[3, 1, 0.1]} />
-                <meshStandardMaterial color="#a0522d" />
+                <meshStandardMaterial color="#0b2a5c" />
             </mesh>
 
             <group position={[-0.8, 1.6, 0]}>

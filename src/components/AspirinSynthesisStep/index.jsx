@@ -1,8 +1,11 @@
 import { Text } from '@react-three/drei'
 
-function SoapMakingStep() {
+function AspirinSynthesisStep({ onExperiment }) {
     return (
-      <group position={[-6.5, 0, -5]}>  
+      <group 
+        position={[6.5, 0, -5]}
+        onClick={() => onExperiment(false, 'aspirin')}
+      >  
         <mesh position={[0, 0.05, 0]}>
           <boxGeometry args={[1.5, 0.1, 1]} />
           <meshStandardMaterial
@@ -18,10 +21,10 @@ function SoapMakingStep() {
           color="black"
           textAlign="center"
         >
-          Step here to make some bubbles
+          Step here to explore the chemistry behind pain relief
         </Text>
       </group>
     )
   }
 
-  export default SoapMakingStep;    
+  export default AspirinSynthesisStep;    
