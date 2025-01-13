@@ -7,28 +7,31 @@ import Student from '../Student';
 import SafetyShelf from '../SafetyShelf';
 import SafetyStep from '../SafetyStep';
 import SoapMakingStep from '../SoapMakingStep';
+import AspirinSynthesisStep from '../AspirinSynthesisStep';
 
 function MainLab() {
     const [showWarning, setShowWarning] = useState(false)
     const [showEnterPrompt, setShowEnterPrompt] = useState(false)
+    const [experimentType, setExperimentType] = useState(null)
     const navigate = useNavigate();
   
     useEffect(() => {
       const handleKeyPress = (e) => {
         if (e.key === 'Enter' && showEnterPrompt) {
-          navigate('/soap-making');
+          navigate(experimentType === 'soap' ? '/soap-making' : '/aspirin-synthesis');
         }
       };
   
       window.addEventListener('keypress', handleKeyPress);
       return () => window.removeEventListener('keypress', handleKeyPress);
-    }, [showEnterPrompt, navigate]);
+    }, [showEnterPrompt, navigate, experimentType]);
   
-    const handleExperiment = (hasEquipment) => {
+    const handleExperiment = (hasEquipment, type) => {
       if (!hasEquipment) {
         setShowWarning(true);
         setTimeout(() => setShowWarning(false), 3000);
       } else {
+        setExperimentType(type);
         setShowEnterPrompt(true);
       }
     }
@@ -43,6 +46,7 @@ function MainLab() {
             <SafetyShelf />
             <SafetyStep />
             <SoapMakingStep />
+            <AspirinSynthesisStep />
             <Student onExperiment={handleExperiment} />
   
             <OrbitControls />
