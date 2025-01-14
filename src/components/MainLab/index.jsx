@@ -5,9 +5,12 @@ import { useNavigate } from 'react-router-dom';
 import Room from '../Room';
 import Student from '../Student';
 import SafetyShelf from '../SafetyShelf';
-import SafetyStep from '../SafetyStep';
-import SoapMakingStep from '../SoapMakingStep';
-import AspirinSynthesisStep from '../AspirinSynthesisStep';
+import ExperimentStep from '../ExperimentStep';
+
+const EXPERIMENT_ROUTES = {
+  'soap': 'soap-making',
+  'aspirin': 'aspirin-synthesis',
+};
 
 function MainLab() {
     const [showWarning, setShowWarning] = useState(false)
@@ -18,7 +21,7 @@ function MainLab() {
     useEffect(() => {
       const handleKeyPress = (e) => {
         if (e.key === 'Enter' && showEnterPrompt) {
-          navigate(experimentType === 'soap' ? '/soap-making' : '/aspirin-synthesis');
+          navigate(`/${EXPERIMENT_ROUTES[experimentType]}`);
         }
       };
   
@@ -49,9 +52,6 @@ function MainLab() {
             <directionalLight position={[5, 5, 5]} intensity={1} />
             <Room />
             <SafetyShelf />
-            <SafetyStep />
-            <SoapMakingStep />
-            <AspirinSynthesisStep />
             <Student onExperiment={handleExperiment} />
   
             <OrbitControls 
@@ -64,6 +64,31 @@ function MainLab() {
               target={[0, 1, 0]}
             />
             <gridHelper args={[20, 20]} />
+  
+            <ExperimentStep 
+              position={[0, 0, -1]}
+              size={[1, 0.1, 0.4]}
+              color="#FF4444"
+              opacity={0.8}
+              text="WEAR EQUIPMENT"
+              textScale={[0.3, 0.3, 0.3]}
+            />
+  
+            <ExperimentStep 
+              position={[-6.5, 0, -5]}
+              size={[1.5, 0.1, 1]}
+              color="#22c55e"
+              opacity={0.5}
+              text="Step here to make some bubbles"
+            />
+
+            <ExperimentStep 
+              position={[6.5, 0, -5]}
+              size={[1.5, 0.1, 1]}
+              color="#22c55e"
+              opacity={0.5}
+              text="Step here to explore the chemistry behind pain relief"
+            />
           </Canvas>
   
           {showWarning && (

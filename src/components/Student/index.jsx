@@ -1,159 +1,61 @@
-import { useState, useEffect, useRef } from 'react'
+import { useMovement } from './hooks/useMovement'
+import { useCollisionDetection } from './hooks/useCollisionDetection'
+import { useEffect, useRef, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { useNavigate } from 'react-router-dom';
+import StudentModel from './StudentModel'
 
-function Student({ onExperiment }) {
+const Student = ({ onExperiment }) => {
     const studentRef = useRef()
-    const speed = 0.1
-    const [moveDirection, setMoveDirection] = useState({ x: 0, z: 0 })
+    const [wearing, setWearing] = useState(false)
     const [isWalking, setIsWalking] = useState(false)
     const [legRotation, setLegRotation] = useState(0)
-    const [wearing, setWearing] = useState(false)
-    const navigate = useNavigate();
-  
+    const speed = 0.1
+
+    const { moveDirection, setupMovementControls } = useMovement()
+    const { checkExperimentArea } = useCollisionDetection(onExperiment, wearing)
+    
     useEffect(() => {
-      const handleKeyDown = (e) => {
-        switch (e.key.toLowerCase()) {
-          case 'w':
-            setMoveDirection(prev => ({ ...prev, z: -1 }))
-            break
-          case 's':
-            setMoveDirection(prev => ({ ...prev, z: 1 }))
-            break
-          case 'a':
-            setMoveDirection(prev => ({ ...prev, x: -1 }))
-            break
-          case 'd':
-            setMoveDirection(prev => ({ ...prev, x: 1 }))
-            break
-        }
-      }
-  
-      const handleKeyUp = (e) => {
-        switch (e.key.toLowerCase()) {
-          case 'w':
-          case 's':
-            setMoveDirection(prev => ({ ...prev, z: 0 }))
-            break
-          case 'a':
-          case 'd':
-            setMoveDirection(prev => ({ ...prev, x: 0 }))
-            break
-        }
-      }
-  
-      window.addEventListener('keydown', handleKeyDown)
-      window.addEventListener('keyup', handleKeyUp)
-  
-      return () => {
-        window.removeEventListener('keydown', handleKeyDown)
-        window.removeEventListener('keyup', handleKeyUp)
-      }
-    }, [])
-  
+        const cleanup = setupMovementControls()
+        return cleanup
+    }, [setupMovementControls])
+
     useFrame((state, delta) => {
-      if (studentRef.current) {
+        if (!studentRef.current) return
+
         const newX = studentRef.current.position.x + moveDirection.x * speed
         const newZ = studentRef.current.position.z + moveDirection.z * speed
-  
+
         const isOnSafetyStep =
-          Math.abs(studentRef.current.position.x - 0) < 0.5 &&
-          Math.abs(studentRef.current.position.z - (-1.5)) < 0.2;
-  
+            Math.abs(studentRef.current.position.x - 0) < 0.5 &&
+            Math.abs(studentRef.current.position.z - (-1.5)) < 0.2
+
         if (isOnSafetyStep && !wearing) {
-          setWearing(true)
+            setWearing(true)
         }
-  
-        if (moveDirection.x !== 0 || moveDirection.z !== 0) {
-          console.log('Student position:',
-            studentRef.current.position.x.toFixed(2),
-            studentRef.current.position.z.toFixed(2)
-          );
-        }
-  
-        checkExperimentArea(studentRef.current.position);
-  
+
+        checkExperimentArea(studentRef.current.position)
+
         studentRef.current.position.x = Math.max(-8, Math.min(8, newX))
         studentRef.current.position.z = Math.max(-8, Math.min(8, newZ))
-  
+        
         const isMoving = moveDirection.x !== 0 || moveDirection.z !== 0
         setIsWalking(isMoving)
         if (isMoving) {
-          setLegRotation(prev => (prev + delta * 10) % (Math.PI * 2))
+            setLegRotation(prev => (prev + delta * 10) % (Math.PI * 2))
         } else {
-          setLegRotation(0)
+            setLegRotation(0)
         }
-      }
     })
-  
-    const checkExperimentArea = (position) => {
 
-        const soapArea = { x: -6.5, z: -5 }; 
-        const aspirinArea = { x: 6.5, z: -5 }; 
-        const tolerance = 1;
-
-        if (Math.abs(position.x - soapArea.x) < tolerance && 
-            Math.abs(position.z - soapArea.z) < tolerance) {
-            onExperiment(wearing, 'soap');
-        } else if (Math.abs(position.x - aspirinArea.x) < tolerance && 
-                   Math.abs(position.z - aspirinArea.z) < tolerance) {
-            onExperiment(wearing, 'aspirin');
-        }
-    }
-  
     return (
-      <group ref={studentRef} position={[0, 0, 0]} rotation={[0, Math.PI, 0]}>
-
-        <mesh position={[-0.2, 0.5, 0]} rotation={[isWalking ? Math.sin(legRotation) * 0.3 : 0, 0, 0]}>
-          <boxGeometry args={[0.2, 1, 0.2]} />
-          <meshStandardMaterial color="#1a1a1a" />
-        </mesh>
-        <mesh position={[0.2, 0.5, 0]} rotation={[isWalking ? -Math.sin(legRotation) * 0.3 : 0, 0, 0]}>
-          <boxGeometry args={[0.2, 1, 0.2]} />
-          <meshStandardMaterial color="#1a1a1a" />
-        </mesh>
-  
-        <mesh position={[-0.5, 1.6, 0]} rotation={[isWalking ? -Math.sin(legRotation) * 0.3 : 0, 0, 0]}>
-          <boxGeometry args={[0.2, 0.8, 0.2]} />
-          <meshStandardMaterial color={wearing ? "#e6e6e6" : "#2196F3"} />
-        </mesh>
-        <mesh position={[0.5, 1.6, 0]} rotation={[isWalking ? Math.sin(legRotation) * 0.3 : 0, 0, 0]}>
-          <boxGeometry args={[0.2, 0.8, 0.2]} />
-          <meshStandardMaterial color={wearing ? "#e6e6e6" : "#2196F3"} />
-        </mesh>
-
-        <mesh position={[0, 1.6, 0]}>
-          <boxGeometry args={[0.8, 1.2, 0.4]} />
-          <meshStandardMaterial color={wearing ? "white" : "#2196F3"} />
-        </mesh>
-  
-        <mesh position={[0, 2.4, 0]}>
-          <sphereGeometry args={[0.2, 16, 16]} />
-          <meshStandardMaterial color="#ffdbac" />
-        </mesh>
-  
-        {wearing && (
-          <>
-            <mesh position={[0, 2.4, 0.15]}>
-              <boxGeometry args={[0.3, 0.1, 0.1]} />
-              <meshStandardMaterial color="#a0a0a0" transparent opacity={0.5} />
-            </mesh>
-  
-            <mesh position={[0, 2.1, 0]}>
-              <boxGeometry args={[0.6, 0.1, 0.3]} />
-              <meshStandardMaterial color="white" />
-            </mesh>
-
-            {[-0.2, 0, 0.2].map((y, i) => (
-              <mesh key={i} position={[0, 1.6 + y, 0.21]}>
-                <cylinderGeometry args={[0.03, 0.03, 0.02]} />
-                <meshStandardMaterial color="#dcdcdc" />
-              </mesh>
-            ))}
-          </>
-        )}
-      </group>
+        <group ref={studentRef} position={[0, 0, 0]} rotation={[0, Math.PI, 0]}>
+            <StudentModel 
+                isWalking={isWalking}
+                legRotation={legRotation}
+                wearing={wearing}
+            />
+        </group>
     )
-  }
+}
 
-  export default Student;
+export default Student
