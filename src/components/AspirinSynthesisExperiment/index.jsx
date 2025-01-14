@@ -233,10 +233,10 @@ function AspirinSynthesisExperiment() {
     };
 
     return (
-        <div style={{ width: '100vw', height: '100vh' }}>
+        <div className="w-screen h-screen">
             <Canvas
                 camera={{
-                    position: [10, 5, 10],
+                    position: [0, 2, 10],
                     fov: 50
                 }}
             >
@@ -255,7 +255,7 @@ function AspirinSynthesisExperiment() {
 
                 <mesh position={[0, 1, 0]}>
                     <boxGeometry args={[12, 0.2, 6]} />
-                    <meshStandardMaterial color="#0b2a5c" />
+                    <meshStandardMaterial color="#404040" />
                 </mesh>
 
                 <group position={[-1, 1.3, 1]}>
@@ -846,25 +846,11 @@ function AspirinSynthesisExperiment() {
                 <OrbitControls />
             </Canvas>
 
-            {/* Control panels and UI */}
             {quizCompleted && (
                 <>
-                    <div style={{
-                        position: 'fixed',
-                        right: '20px',
-                        top: '20px',
-                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                        padding: '20px',
-                        borderRadius: '10px',
-                        boxShadow: '0 0 10px rgba(0,0,0,0.1)',
-                        color: 'black'
-                    }}>
-                        <h2 style={{ margin: '0 0 15px 0' }}>Aspirin Synthesis</h2>
-                        <div style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: '8px'
-                        }}>
+                    <div className="fixed right-5 top-5 bg-white/90 p-5 rounded-lg shadow-md text-black">
+                        <h2 className="m-0 mb-4">Aspirin Synthesis</h2>
+                        <div className="flex flex-col gap-2">
                             {[
                                 'Acid Preparation',
                                 'Acid Catalyst Addition',
@@ -878,16 +864,7 @@ function AspirinSynthesisExperiment() {
                                 <button
                                     key={index}
                                     onClick={() => handleStep(step)}
-                                    style={{
-                                        padding: '8px 16px',
-                                        backgroundColor: '#4CAF50',
-                                        color: 'white',
-                                        border: 'none',
-                                        borderRadius: '5px',
-                                        cursor: 'pointer',
-                                        width: '200px',
-                                        textAlign: 'left'
-                                    }}
+                                    className="px-4 py-2 bg-green-500 text-white rounded cursor-pointer w-50 text-left hover:bg-green-600"
                                 >
                                     {`${index + 1}. ${step}`}
                                 </button>
@@ -895,27 +872,10 @@ function AspirinSynthesisExperiment() {
                         </div>
                     </div>
 
-                    <div style={{
-                        position: 'fixed',
-                        left: '20px',
-                        top: '20px',
-                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                        padding: '20px',
-                        borderRadius: '10px',
-                        boxShadow: '0 0 10px rgba(0,0,0,0.1)',
-                        maxWidth: '300px',
-                        color: 'black'
-                    }}>
-                        <h2 style={{ margin: '0 0 15px 0' }}>Reaction Overview</h2>
-                        <div style={{
-                            backgroundColor: 'rgba(240, 240, 240, 0.9)',
-                            padding: '12px',
-                            borderRadius: '5px',
-                            fontSize: '14px',
-                            fontFamily: 'monospace',
-                            lineHeight: '1.4'
-                        }}>
-                            <div style={{ marginBottom: '12px' }}>
+                    <div className="fixed left-5 top-5 bg-white/90 p-5 rounded-lg shadow-md max-w-[300px] text-black">
+                        <h2 className="m-0 mb-4">Reaction Overview</h2>
+                        <div className="bg-gray-100/90 p-3 rounded text-sm font-mono leading-relaxed">
+                            <div className="mb-3">
                                 <strong>Synthesis Reaction:</strong><br />
                                 C₇H₆O₃ + (CH₃CO)₂O → C₉H₈O₄ + CH₃COOH
                             </div>
@@ -929,61 +889,21 @@ function AspirinSynthesisExperiment() {
                     </div>
 
                     {showNotification && (
-                        <div style={{
-                            position: 'absolute',
-                            top: '20px',
-                            left: '50%',
-                            transform: 'translateX(-50%)',
-                            background: 'black',
-                            padding: '20px',
-                            borderRadius: '10px',
-                            boxShadow: '0 0 10px rgba(0,0,0,0.1)',
-                            zIndex: 1000,
-                            color: 'white',
-                            fontWeight: 'bold'
-                        }}>
+                        <div className="absolute top-5 left-1/2 -translate-x-1/2 bg-black p-5 rounded-lg shadow-md z-50 text-white font-bold">
                             {notificationText}
                         </div>
                     )}
 
                     {showWarning && (
-                        <div style={{
-                            position: 'fixed',
-                            bottom: '10px',
-                            left: '50%',
-                            transform: 'translateX(-50%)',
-                            backgroundColor: '#ff3333',
-                            color: 'white',
-                            padding: '15px 30px',
-                            borderRadius: '8px',
-                            zIndex: 99999,
-                            fontWeight: 'bold',
-                            fontSize: '20px',
-                            boxShadow: '0 4px 6px rgba(0,0,0,0.2)',
-                            border: '2px solid #ff0000',
-                            pointerEvents: 'none',
-                            userSelect: 'none'
-                        }}>
+                        <div className="fixed bottom-2.5 left-1/2 -translate-x-1/2 bg-red-600 text-white p-4 px-8 rounded-lg z-50 font-bold text-xl shadow-lg border-2 border-red-500 select-none pointer-events-none">
                             {warningText}
                         </div>
                     )}
                 </>
             )}
 
-            {/* Quiz overlay */}
             {!quizCompleted && (
-                <div style={{
-                    position: 'fixed',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    zIndex: 1000
-                }}>
+                <div className="fixed inset-0 bg-black/70 flex justify-center items-center z-50">
                     <AspirinQuiz onQuizComplete={handleQuizComplete} />
                 </div>
             )}
