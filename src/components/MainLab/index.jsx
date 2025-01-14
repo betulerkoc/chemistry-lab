@@ -9,6 +9,11 @@ import SafetyStep from '../SafetyStep';
 import SoapMakingStep from '../SoapMakingStep';
 import AspirinSynthesisStep from '../AspirinSynthesisStep';
 
+const EXPERIMENT_ROUTES = {
+  'soap': 'soap-making',
+  'aspirin': 'aspirin-synthesis',
+};
+
 function MainLab() {
     const [showWarning, setShowWarning] = useState(false)
     const [showEnterPrompt, setShowEnterPrompt] = useState(false)
@@ -18,7 +23,7 @@ function MainLab() {
     useEffect(() => {
       const handleKeyPress = (e) => {
         if (e.key === 'Enter' && showEnterPrompt) {
-          navigate(experimentType === 'soap' ? '/soap-making' : '/aspirin-synthesis');
+          navigate(`/${EXPERIMENT_ROUTES[experimentType]}`);
         }
       };
   
