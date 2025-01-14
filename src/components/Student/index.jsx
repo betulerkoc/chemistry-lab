@@ -25,7 +25,6 @@ const Student = ({ onExperiment }) => {
         const newX = studentRef.current.position.x + moveDirection.x * speed
         const newZ = studentRef.current.position.z + moveDirection.z * speed
 
-        // Check safety area
         const isOnSafetyStep =
             Math.abs(studentRef.current.position.x - 0) < 0.5 &&
             Math.abs(studentRef.current.position.z - (-1.5)) < 0.2
@@ -36,11 +35,9 @@ const Student = ({ onExperiment }) => {
 
         checkExperimentArea(studentRef.current.position)
 
-        // Update position with boundaries
         studentRef.current.position.x = Math.max(-8, Math.min(8, newX))
         studentRef.current.position.z = Math.max(-8, Math.min(8, newZ))
-
-        // Update walking animation
+        
         const isMoving = moveDirection.x !== 0 || moveDirection.z !== 0
         setIsWalking(isMoving)
         if (isMoving) {
