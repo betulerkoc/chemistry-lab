@@ -2,7 +2,7 @@
 
 This game is designed to give you a hands-on experience in performing chemistry experiments, such as soap-making and aspirin synthesis, in a safe and engaging virtual environment. Whether you’re a student, an aspiring chemist, or simply curious about chemistry, this lab is here to spark your curiosity and deepen your understanding of scientific principles.
 
-**Demo:** [Virtual-lab/](https://main.d2l8y4waeow4xt.amplifyapp.com/)
+**Demo:** [Virtual-lab](https://main.d2l8y4waeow4xt.amplifyapp.com/)
 
 ---
 
@@ -60,6 +60,11 @@ In real-world chemistry labs, conducting experiments involves handling potential
 
 ### Interactive Experiments
 
+ **Safety Equipment Requirements**
+- Mandatory safety gear (goggles, lab coat, gloves) must be equipped before starting any experiment
+- Access restrictions until all safety requirements are met
+
+
   **Soap Making Experiment**
 
 - Complete simulation of the saponification process
@@ -89,17 +94,20 @@ In real-world chemistry labs, conducting experiments involves handling potential
 ## Installation
 
 1. **Clone the repository**  
-   ```bash
-   git clone https://github.com/betulerkoc/chemistry-lab.git
-cd virtual-chemistry-lab
-```
+   ```bash git clone https://github.com/betulerkoc/chemistry-lab.git cd virtual-chemistry-lab```
 
 2. **Install dependencies**  
-   ```bash
-   npm install
-   ```
+   ```bash npm install```
 
 3. **Start the development server**  
-   ```bash
-   npm run dev
-   ```
+   ```bash npm run dev```
+                             
+---
+
+## Contributing
+
+Contributions are welcome! If you have ideas for new experiments, improvements, or want to help with the project, please feel free to submit a pull request.
+
+---
+
+Thank you for joining us in this virtual chemistry adventure! Let’s make learning fun and safe together.
