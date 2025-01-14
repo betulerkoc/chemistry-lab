@@ -65,7 +65,7 @@ In real-world chemistry labs, conducting experiments involves handling potential
 - Access restrictions until all safety requirements are met
 
 
-  **Soap Making Experiment**
+ **Soap Making Experiment**
 
 - Complete simulation of the saponification process
 - Step-by-step guidance through the soap-making procedure
