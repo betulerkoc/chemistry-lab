@@ -83,7 +83,7 @@ function MainLab() {
             </div>
           )}
   
-          <div className="fixed bottom-5 left-5 bg-white/90 p-5 rounded-2xl shadow-lg backdrop-blur border border-white/20 text-base text-gray-800 z-10">
+          <div className="fixed bottom-5 left-5 bg-white/90 p-5 rounded-2xl shadow-lg backdrop-blur border border-white/20 text-black text-gray-800 z-10">
             <p className="m-0 mb-3 font-bold text-lg border-b-2 border-black/10 pb-2">
               Controls:
             </p>
