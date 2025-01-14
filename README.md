@@ -3,6 +3,8 @@
 
 This game is designed to give you a hands-on experience in performing chemistry experiments, such as soap-making and aspirin synthesis, in a safe and engaging virtual environment. Whether you’re a student, an aspiring chemist, or simply curious about chemistry, this lab is here to spark your curiosity and deepen your understanding of scientific principles.
 
+Demo: https://main.d2l8y4waeow4xt.amplifyapp.com/
+
 ## Before You Start: Safety First!
 
 Safety is a critical aspect of every chemistry experiment. Even though this is a virtual lab, understanding and practicing safety protocols will prepare you for real-world lab work.
