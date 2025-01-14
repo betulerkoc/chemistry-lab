@@ -94,7 +94,7 @@ In real-world chemistry labs, conducting experiments involves handling potential
 ## Installation
 
 1. **Clone the repository**  
-   ```bash git clone https://github.com/betulerkoc/chemistry-lab.git cd virtual-chemistry-lab```
+   ```bash git clone https://github.com/betulerkoc/chemistry-lab.git cd chemistry-lab```
 
 2. **Install dependencies**  
    ```bash npm install```
