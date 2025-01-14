@@ -1,5 +1,3 @@
-import { Text } from '@react-three/drei'
-import PropTypes from 'prop-types'
 import { Wall } from './Wall'
 import { Floor } from './Floor'
 import { Ceiling } from './Ceiling'
