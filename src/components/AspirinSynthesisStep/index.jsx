@@ -5,8 +5,12 @@ function AspirinSynthesisStep({ onExperiment }) {
       <group 
         position={[6.5, 0, -5]}
         onClick={() => onExperiment(false, 'aspirin')}
+        className="cursor-pointer"
       >  
-        <mesh position={[0, 0.05, 0]}>
+        <mesh 
+          position={[0, 0.05, 0]}
+          className="hover:scale-105 transition-transform"
+        >
           <boxGeometry args={[1.5, 0.1, 1]} />
           <meshStandardMaterial
             color="#4CAF50"
@@ -20,6 +24,7 @@ function AspirinSynthesisStep({ onExperiment }) {
           scale={[0.2, 0.2, 0.2]}
           color="black"
           textAlign="center"
+          className="select-none"
         >
           Step here to explore the chemistry behind pain relief
         </Text>

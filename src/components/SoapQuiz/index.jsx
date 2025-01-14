@@ -48,16 +48,24 @@ function SoapQuiz({ onQuizComplete }) {
     const [answers, setAnswers] = useState(new Array(questions.length).fill(null));
     const [showResults, setShowResults] = useState(false);
     const [attempts, setAttempts] = useState(0);
+    const [feedback, setFeedback] = useState('');
 
     const handleAnswer = (optionIndex) => {
         const newAnswers = [...answers];
         newAnswers[currentQuestion] = optionIndex;
         setAnswers(newAnswers);
+
+        if (optionIndex !== questions[currentQuestion].correctAnswer) {
+            setFeedback('Incorrect answer, please try again.');
+        } else {
+            setFeedback('');
+        }
     };
 
     const handleNext = () => {
         if (currentQuestion < questions.length - 1) {
             setCurrentQuestion(currentQuestion + 1);
+            setFeedback('');
         } else {
             checkAnswers();
         }
@@ -79,91 +87,73 @@ function SoapQuiz({ onQuizComplete }) {
         setCurrentQuestion(0);
         setAnswers(new Array(questions.length).fill(null));
         setShowResults(false);
+        setFeedback('');
     };
 
     return (
-        <div style={{
-            position: 'fixed',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            backgroundColor: 'white',
-            padding: '2rem',
-            borderRadius: '10px',
-            boxShadow: '0 0 10px rgba(0,0,0,0.1)',
-            maxWidth: '600px',
-            width: '90%'
-        }}>
-            <h2 style={{ color: '#0b2a5c', marginBottom: '1.5rem' }}>
+        <div className="bg-white p-8 rounded-lg shadow-md max-w-[600px] w-[90%]">
+            <h2 className="text-[#0b2a5c] mb-6">
                 Soap Making Safety Quiz
             </h2>
 
             {!showResults ? (
                 <>
-                    <div style={{ marginBottom: '1.5rem', color: 'black'}}>
-                        <h3 style={{ marginBottom: '1rem' }}>
+                    <div className="mb-6 text-black">
+                        <h3 className="mb-4">
                             Question {currentQuestion + 1} of {questions.length}
                         </h3>
-                        <p style={{ marginBottom: '1rem' }}>
+                        <p className="mb-4">
                             {questions[currentQuestion].question}
                         </p>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                        <div className="flex flex-col gap-2">
                             {questions[currentQuestion].options.map((option, index) => (
                                 <button
                                     key={index}
                                     onClick={() => handleAnswer(index)}
-                                    style={{
-                                        padding: '0.5rem 1rem',
-                                        backgroundColor: answers[currentQuestion] === index ? '#0b2a5c' : 'white',
-                                        color: answers[currentQuestion] === index ? 'white' : 'black',
-                                        border: '1px solid #0b2a5c',
-                                        borderRadius: '5px',
-                                        cursor: 'pointer',
-                                        textAlign: 'left'
-                                    }}
+                                    className={`
+                                        p-2 rounded text-left border border-[#0b2a5c] cursor-pointer
+                                        ${answers[currentQuestion] === index 
+                                            ? (index === questions[currentQuestion].correctAnswer 
+                                                ? 'bg-[#0b2a5c] text-white' 
+                                                : 'bg-red-500 text-white')
+                                            : 'bg-white text-black'
+                                        }
+                                    `}
                                 >
                                     {option}
                                 </button>
                             ))}
                         </div>
+                        {feedback && <p className="text-red-500 mt-4">{feedback}</p>}
                     </div>
                     <button
                         onClick={handleNext}
                         disabled={answers[currentQuestion] === null}
-                        style={{
-                            padding: '0.5rem 1rem',
-                            backgroundColor: answers[currentQuestion] === null ? '#ccc' : '#0b2a5c',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '5px',
-                            cursor: answers[currentQuestion] === null ? 'not-allowed' : 'pointer'
-                        }}
+                        className={`
+                            p-2 rounded border-none
+                            ${answers[currentQuestion] === null 
+                                ? 'bg-gray-300 cursor-not-allowed' 
+                                : 'bg-[#0b2a5c] cursor-pointer'
+                            } text-white
+                        `}
                     >
                         {currentQuestion === questions.length - 1 ? 'Submit' : 'Next'}
                     </button>
                 </>
             ) : (
                 <div>
-                    <h3 style={{ color: 'black' }}>Quiz Results</h3>
+                    <h3>Quiz Results</h3>
                     <p>
                         You got {answers.filter((answer, index) => answer === questions[index].correctAnswer).length} out of {questions.length} correct!
                     </p>
                     {answers.every((answer, index) => answer === questions[index].correctAnswer) ? (
-                        <p style={{ color: 'green' }}>Congratulations! You can now proceed to the experiment.</p>
+                        <p className="text-green-500">Congratulations! You can now proceed to the experiment.</p>
                     ) : (
                         <>
-                            <p style={{ color: 'red' }}>Please review the questions and try again.</p>
+                            <p className="text-red-500">Please review the questions and try again.</p>
                             <button
                                 onClick={restartQuiz}
-                                style={{
-                                    padding: '0.5rem 1rem',
-                                    backgroundColor: '#0b2a5c',
-                                    color: 'white',
-                                    border: 'none',
-                                    borderRadius: '5px',
-                                    cursor: 'pointer',
-                                    marginTop: '1rem'
-                                }}
+                                className="mt-4 p-2 bg-[#0b2a5c] text-white border-none rounded cursor-pointer"
                             >
                                 Retry Quiz
                             </button>

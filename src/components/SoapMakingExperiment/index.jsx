@@ -275,10 +275,10 @@ function SoapMakingExperiment() {
     };
   
     return (
-      <div style={{ width: '100vw', height: '100vh' }}>
+      <div className="w-screen h-screen">
         <Canvas
             camera={{
-                position: [10, 5, 10],
+                position: [0, 2, 10],
                 fov: 50
             }}
         >
@@ -297,7 +297,7 @@ function SoapMakingExperiment() {
   
             <mesh position={[0, 1, 0]}>
                 <boxGeometry args={[12, 0.2, 6]} />
-                <meshStandardMaterial color="#0b2a5c" />
+                <meshStandardMaterial color="#404040" />
             </mesh>
 
             <group ref={oilBeakerRef} position={[-2.5, 1.5, 1.5]}>
@@ -701,8 +701,9 @@ function SoapMakingExperiment() {
                 enableZoom={true}
                 enablePan={true}
                 enableRotate={true}
-                minDistance={2}
+                minDistance={5}
                 maxDistance={20}
+                target={[0, 1, 0]}
             />
 
             <group position={[4, 1.1, 1.5]}>
@@ -770,39 +771,21 @@ function SoapMakingExperiment() {
             </group>
         </Canvas>
 
+        {showNotification && (
+            <div className="absolute top-5 left-1/2 -translate-x-1/2 bg-black px-5 py-4 rounded-lg shadow-lg z-50 text-white font-bold">
+                {notificationText}
+            </div>
+        )}
+
         {quizCompleted && (
             <>
-                <div style={{
-                    position: 'fixed',
-                    right: '20px',
-                    top: '20px',
-                    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                    padding: '20px',
-                    borderRadius: '10px',
-                    color: 'black',
-                    boxShadow: '0 0 10px rgba(0,0,0,0.1)'
-                }}>
-                    <h2>Soap Making Steps</h2>
-                    <ol style={{
-                        listStyle: 'none',
-                        padding: 0,
-                        margin: 0,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '10px',
-                    }}>
+                <div className="fixed right-5 top-5 bg-white/90 p-5 rounded-lg text-black shadow-lg">
+                    <h2 className="text-xl font-bold mb-4">Soap Making Steps</h2>
+                    <ol className="list-none p-0 m-0 flex flex-col gap-2.5">
                         <li>
                             <button
                                 onClick={handlePrepareOil}
-                                style={{
-                                    padding: '10px 20px',
-                                    backgroundColor: '#4CAF50',
-                                    color: 'white',
-                                    border: 'none',
-                                    borderRadius: '5px',
-                                    cursor: 'pointer',
-                                    width: '200px'
-                                }}
+                                className="px-5 py-2.5 bg-green-500 text-white border-none rounded cursor-pointer w-48 hover:bg-green-600"
                             >
                                 1. Prepare Oil
                             </button>
@@ -810,15 +793,7 @@ function SoapMakingExperiment() {
                         <li>
                             <button
                                 onClick={handlePrepareBase}
-                                style={{
-                                    padding: '10px 20px',
-                                    backgroundColor: '#4CAF50',
-                                    color: 'white',
-                                    border: 'none',
-                                    borderRadius: '5px',
-                                    cursor: 'pointer',
-                                    width: '200px'
-                                }}
+                                className="px-5 py-2.5 bg-green-500 text-white border-none rounded cursor-pointer w-48 hover:bg-green-600"
                             >
                                 2. Prepare Base Solution
                             </button>
@@ -826,15 +801,7 @@ function SoapMakingExperiment() {
                         <li>
                             <button
                                 onClick={handleMixSolutions}
-                                style={{
-                                    padding: '10px 20px',
-                                    backgroundColor: '#4CAF50',
-                                    color: 'white',
-                                    border: 'none',
-                                    borderRadius: '5px',
-                                    cursor: 'pointer',
-                                    width: '200px'
-                                }}
+                                className="px-5 py-2.5 bg-green-500 text-white border-none rounded cursor-pointer w-48 hover:bg-green-600"
                             >
                                 3. Mix Oil and Base
                             </button>
@@ -843,15 +810,8 @@ function SoapMakingExperiment() {
                             <button 
                                 onClick={handleHeatMixture}
                                 disabled={isHeating}
-                                style={{
-                                    padding: '10px 20px',
-                                    backgroundColor: '#4CAF50',
-                                    color: 'white',
-                                    border: 'none',
-                                    borderRadius: '5px',
-                                    cursor: isHeating ? 'not-allowed' : 'pointer',
-                                    width: '200px'
-                                }}
+                                className={`px-5 py-2.5 bg-green-500 text-white border-none rounded w-48 
+                                  ${isHeating ? 'cursor-not-allowed opacity-50' : 'cursor-pointer hover:bg-green-600'}`}
                             >
                                 4. Heat the Mixture {isHeating ? `(${10 - heatingTime}s)` : ''}
                             </button>
@@ -859,15 +819,7 @@ function SoapMakingExperiment() {
                         <li>
                             <button 
                                 onClick={handlePrepareSaltSolution}
-                                style={{
-                                    padding: '10px 20px',
-                                    backgroundColor: '#4CAF50',
-                                    color: 'white',
-                                    border: 'none',
-                                    borderRadius: '5px',
-                                    cursor: 'pointer',
-                                    width: '200px'
-                                }}
+                                className="px-5 py-2.5 bg-green-500 text-white border-none rounded cursor-pointer w-48 hover:bg-green-600"
                             >
                                 5. Prepare Salt Solution
                             </button>
@@ -876,15 +828,8 @@ function SoapMakingExperiment() {
                             <button 
                                 onClick={handleSeparateSoap}
                                 disabled={isSeparating}
-                                style={{
-                                    padding: '10px 20px',
-                                    backgroundColor: '#4CAF50',
-                                    color: 'white',
-                                    border: 'none',
-                                    borderRadius: '5px',
-                                    cursor: isSeparating ? 'not-allowed' : 'pointer',
-                                    width: '200px'
-                                }}
+                                className={`px-5 py-2.5 bg-green-500 text-white border-none rounded w-48
+                                  ${isSeparating ? 'cursor-not-allowed opacity-50' : 'cursor-pointer hover:bg-green-600'}`}
                             >
                                 6. Separate Soap {isSeparating ? `(${10 - separationTime}s)` : ''}
                             </button>
@@ -892,28 +837,9 @@ function SoapMakingExperiment() {
                     </ol>
                 </div>
 
-                <div style={{
-                    position: 'fixed',
-                    left: '20px',
-                    top: '20px',
-                    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                    padding: '20px',
-                    borderRadius: '10px',
-                    color: 'black',
-                    boxShadow: '0 0 10px rgba(0,0,0,0.1)',
-                    maxWidth: '400px'
-                }}>
-                    <h2>Chemical Reactions</h2>
-                    <div style={{
-                        fontFamily: 'monospace',
-                        whiteSpace: 'pre-wrap',
-                        fontSize: '14px',
-                        lineHeight: '1.5',
-                        backgroundColor: 'rgba(240, 240, 240, 0.9)',
-                        padding: '10px',
-                        borderRadius: '5px',
-                        marginBottom: '10px'
-                    }}>
+                <div className="fixed left-5 top-5 bg-white/90 p-5 rounded-lg text-black shadow-lg max-w-md">
+                    <h2 className="text-xl font-bold mb-4">Chemical Reactions</h2>
+                    <div className="font-mono text-sm leading-relaxed bg-gray-100/90 p-2.5 rounded mb-2.5">
                         <strong>1. Saponification Reaction:</strong>
                         <br />
                         Fat/Oil + NaOH → Soap + Glycerol
@@ -923,24 +849,16 @@ function SoapMakingExperiment() {
                         <br />
                         C₃H₅(OOCR)₃ + 3NaOH → 3RCOONa + C₃H₅(OH)₃
                         <br />
-                        <em style={{ fontSize: '12px' }}>
+                        <em className="text-xs">
                             (Triglyceride + Sodium Hydroxide → Sodium Salt of Fatty Acid + Glycerol)
                         </em>
                     </div>
-                    <div style={{
-                        fontFamily: 'monospace',
-                        whiteSpace: 'pre-wrap',
-                        fontSize: '14px',
-                        lineHeight: '1.5',
-                        backgroundColor: 'rgba(240, 240, 240, 0.9)',
-                        padding: '10px',
-                        borderRadius: '5px'
-                    }}>
+                    <div className="font-mono text-sm leading-relaxed bg-gray-100/90 p-2.5 rounded">
                         <strong>2. Salting Out Process:</strong>
                         <br />
                         Addition of NaCl causes soap to precipitate out of solution
                         <br />
-                        <em style={{ fontSize: '12px' }}>
+                        <em className="text-xs">
                             (Separates soap from glycerol and impurities)
                         </em>
                     </div>
@@ -949,18 +867,7 @@ function SoapMakingExperiment() {
         )}
 
         {!quizCompleted && (
-            <div style={{
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                zIndex: 1000
-            }}>
+            <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
                 <SoapQuiz onQuizComplete={handleQuizComplete} />
             </div>
         )}

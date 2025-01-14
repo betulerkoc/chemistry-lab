@@ -64,7 +64,7 @@ function SafetyShelf() {
                 </mesh>
                 <mesh position={[0, 0.1, 0.2]}>
                     <boxGeometry args={[0.35, 0.05, 0.15]} />
-                    <meshStandardMaterial color="#e6e6e6" />
+                    <meshStandardMaterial color="#dcdcdc" />
                 </mesh>
             </group>
 
@@ -76,9 +76,10 @@ function SafetyShelf() {
                 <Text
                     position={[0, 0.05, 0.03]}
                     fontSize={0.15}
-                    color="#000000"
+                    color="black"
                     anchorX="center"
                     anchorY="middle"
+                    className="text-black text-2xl font-bold"
                 >
                     LAB SAFETY EQUIPMENT
                 </Text>
@@ -88,26 +89,27 @@ function SafetyShelf() {
                     color="#444444"
                     anchorX="center"
                     anchorY="middle"
+                    className="text-gray-600 text-base"
                 >
                     Lab Coat
                 </Text>
-
                 <Text
                     position={[0, -0.05, 0.03]}
                     fontSize={0.08}
                     color="#444444"
                     anchorX="center"
                     anchorY="middle"
+                    className="text-gray-600 text-base"
                 >
                     Safety Glasses
                 </Text>
-
                 <Text
                     position={[0.8, -0.05, 0.03]}
                     fontSize={0.08}
                     color="#444444"
                     anchorX="center"
                     anchorY="middle"
+                    className="text-gray-600 text-base"
                 >
                     Safety Gloves
                 </Text>
